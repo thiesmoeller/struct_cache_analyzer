@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+.uv/
+*.egg
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# CMake
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+*.a
+*.lib
+
+# Build outputs
+bin/
+*.o
+*.obj
+*.exe
+*.dll
+*.dylib
+
+# Perf data
+perf.data
+perf.data.*
+perf_script
+perf_script*.txt
+
+# Reports
+*.html
+report_dir/
+report.html
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+
+# Logs
+*.log

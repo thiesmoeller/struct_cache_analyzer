@@ -1,0 +1,290 @@
+# Example mappings.yml file
+# Maps hot functions/source lines to struct fields for cache analysis
+
+mappings:
+  # Match by function name (when source lines aren't available)
+  - match:
+      function: "process_array_bad"
+    struct: "BadLayout"
+    fields:
+      - "hot_field"
+    field_hotness:
+      hot_field: 1000
+    # Manual struct layout (since pahole may not find local structs)
+    struct_layout:
+      size: 68
+      fields:
+        - name: "rarely_used"
+          offset: 0
+          size: 8
+        - name: "padding"
+          offset: 8
+          size: 56
+        - name: "hot_field"
+          offset: 64
+          size: 4
+
+  - match:
+      function: "process_array_good"
+    struct: "GoodLayout"
+    fields:
+      - "hot_field"
+    field_hotness:
+      hot_field: 500
+    struct_layout:
+      size: 64
+      fields:
+        - name: "hot_field"
+          offset: 0
+          size: 4
+        - name: "rarely_used"
+          offset: 4
+          size: 8
+        - name: "padding"
+          offset: 12
+          size: 52
+
+  - match:
+      function: "process_large_array"
+    struct: "LargeStruct"
+    fields:
+      - "field1"
+    field_hotness:
+      field1: 800
+    struct_layout:
+      size: 72
+      fields:
+        - name: "field1"
+          offset: 0
+          size: 8
+        - name: "field2"
+          offset: 8
+          size: 8
+        - name: "field3"
+          offset: 16
+          size: 8
+        - name: "field4"
+          offset: 24
+          size: 8
+        - name: "field5"
+          offset: 32
+          size: 8
+        - name: "field6"
+          offset: 40
+          size: 8
+        - name: "field7"
+          offset: 48
+          size: 8
+        - name: "field8"
+          offset: 56
+          size: 8
+        - name: "field9"
+          offset: 64
+          size: 8
+
+  - match:
+      function: "process_optimized"
+    struct: "OptimizedStruct"
+    fields:
+      - "hot_counter"
+      - "hot_accumulator"
+      - "hot_value"
+    field_hotness:
+      hot_counter: 600
+      hot_accumulator: 400
+      hot_value: 300
+    struct_layout:
+      size: 72
+      fields:
+        - name: "hot_counter"
+          offset: 0
+          size: 4
+        - name: "hot_accumulator"
+          offset: 4
+          size: 4
+        - name: "hot_value"
+          offset: 8
+          size: 8
+        - name: "cold_data"
+          offset: 16
+          size: 56
+
+  - match:
+      function: "process_nested"
+    struct: "NestedStruct"
+    fields:
+      - "hot_id"
+      - "hot_status"
+    field_hotness:
+      hot_id: 700
+      hot_status: 600
+    struct_layout:
+      size: 68
+      fields:
+        - name: "hot_id"
+          offset: 0
+          size: 4
+        - name: "inner"
+          offset: 4
+          size: 56
+        - name: "hot_status"
+          offset: 60
+          size: 4
+        - name: "padding"
+          offset: 64
+          size: 4
+
+  - match:
+      function: "process_tagged_union"
+    struct: "TaggedUnion"
+    fields:
+      - "hot_data"
+      - "hot_flag"
+    field_hotness:
+      hot_data: 900
+      hot_flag: 500
+    struct_layout:
+      size: 24
+      fields:
+        - name: "tag"
+          offset: 0
+          size: 4
+        - name: "hot_data"
+          offset: 4
+          size: 16
+        - name: "hot_flag"
+          offset: 20
+          size: 4
+
+  - match:
+      function: "process_bitfield"
+    struct: "BitfieldStruct"
+    fields:
+      - "hot_flag1"
+      - "hot_counter"
+      - "hot_value"
+    field_hotness:
+      hot_flag1: 800
+      hot_counter: 700
+      hot_value: 600
+    struct_layout:
+      size: 68
+      fields:
+        - name: "hot_flag1"
+          offset: 0
+          size: 4
+        - name: "hot_counter"
+          offset: 4
+          size: 8
+        - name: "hot_value"
+          offset: 12
+          size: 8
+        - name: "cold_flags"
+          offset: 20
+          size: 48
+
+  - match:
+      function: "process_multi_cacheline"
+    struct: "MultiCacheLineStruct"
+    fields:
+      - "hot_id"
+      - "hot_score"
+      - "hot_priority"
+      - "data"
+    field_hotness:
+      hot_id: 1000
+      hot_score: 900
+      hot_priority: 800
+      data: 600
+    struct_layout:
+      size: 192
+      fields:
+        - name: "hot_id"
+          offset: 0
+          size: 4
+        - name: "hot_priority"
+          offset: 4
+          size: 4
+        - name: "hot_score"
+          offset: 8
+          size: 8
+        - name: "hot_timestamp"
+          offset: 16
+          size: 8
+        - name: "hot_name"
+          offset: 24
+          size: 40
+        - name: "data"
+          offset: 64
+          size: 56
+        - name: "metadata"
+          offset: 120
+          size: 8
+        - name: "values"
+          offset: 128
+          size: 64
+
+  - match:
+      function: "process_pointer"
+    struct: "PointerStruct"
+    fields:
+      - "hot_count"
+      - "hot_value"
+    field_hotness:
+      hot_count: 850
+      hot_value: 750
+    struct_layout:
+      size: 60
+      fields:
+        - name: "hot_count"
+          offset: 0
+          size: 4
+        - name: "hot_ptr"
+          offset: 8
+          size: 8
+        - name: "hot_value"
+          offset: 16
+          size: 4
+        - name: "padding"
+          offset: 20
+          size: 40
+
+  - match:
+      function: "process_mixed"
+    struct: "MixedAccessStruct"
+    fields:
+      - "hot_counter"
+      - "hot_sum"
+      - "hot_index"
+      - "hot_flags"
+      - "medium_value"
+    field_hotness:
+      hot_counter: 1200
+      hot_sum: 1000
+      hot_index: 900
+      hot_flags: 800
+      medium_value: 400
+    struct_layout:
+      size: 96
+      fields:
+        - name: "hot_counter"
+          offset: 0
+          size: 4
+        - name: "hot_index"
+          offset: 4
+          size: 4
+        - name: "hot_sum"
+          offset: 8
+          size: 8
+        - name: "hot_flags"
+          offset: 16
+          size: 16
+        - name: "medium_value"
+          offset: 32
+          size: 4
+        - name: "medium_id"
+          offset: 36
+          size: 4
+        - name: "cold_description"
+          offset: 40
+          size: 56
